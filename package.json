@@ -1,0 +1,27 @@
+{
+  "name": "file-sharing-api-server",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "start": "ENVIRONMENT=production node app.js",
+    "dev": "nodemon app.js",
+    "test": "ENVIRONMENT=test jest --maxWorkers=1 --forceExit"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [],
+  "author": "Nazmul Hasan",
+  "license": "ISC",
+  "description": "File Shareing API Server",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "multer": "^1.4.5-lts.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
