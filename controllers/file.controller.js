@@ -35,11 +35,11 @@ export const downloadFile = async (req, res) => {
 
 export const deleteFile = async (req, res) => {
   try {
-    const { publicKey } = req.params;
-    const fileStream = await fileService.downloadFile(publicKey);
-    fileStream.pipe(res);
+    const { privateKey } = req.params;
+    const response = await fileService.deleteFile(privateKey);
+    res.json(response);
   } catch (error) {
-    logger.error("Failed to delete the file: ", error.message);
+    logger.error("Failed to delete the file: ", error);
     res.status(500).send({
       error: "Failed to delete the file",
     });

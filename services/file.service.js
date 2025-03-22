@@ -56,34 +56,17 @@ class FileService {
   }
 
   async deleteFile(privateKey) {
-    const fileRecord = await this.deleteFileByPrivateKey(privateKey);
+    const fileRecord = await File.findOne({ where: { privateKey } });
     if (!fileRecord) {
       throw new Error('File not found.');
     }
 
     const removeFileResponse = await this.provider.deleteFile(fileRecord.filePath);
     if (removeFileResponse) {
-      await this.deleteFileMetadata(fileRecord.publicKey, privateKey);
+      fileRecord.destroy();
     }
 
-    return removeFileResponse;
-  }
-
-  async getFileByPublicKey(publicKey) {
-    return await File.findOne({ where: { publicKey } });
-  }
-
-  async deleteFileByPrivateKey(privateKey) {
-    const fileRecord = await File.findOne({ where: { privateKey } });
-    if (fileRecord) {
-      await fileRecord.destroy();
-      return { message: "File deleted successfully" };
-    }
-    throw new Error("File not found");
-  }
-
-  async deleteFileMetadata(publicKey, privateKey) {
-    return true;
+    return { message: "File deleted successfully" };
   }
 }
 
