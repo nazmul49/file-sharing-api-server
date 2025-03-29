@@ -1,9 +1,10 @@
 import express from "express";
 
 import conf from './config/conf.js';
-import router from './routes/router.js';
+import router from './router.js';
 import sequelize from "./config/database.js";
 import logger from "./config/logger.js";
+import start_bg_jobs from "./bg-jobs.js";
 
 const app = express();
 
@@ -29,6 +30,8 @@ app.use(router);
     app.on('error', (err) => {
       logger.error('Failed to start the server:', err);
     });
+
+    start_bg_jobs(); // Start background jobs
   } catch (error) {
     logger.error("Unable to connect to the database:", error);
     process.exit(1); // Exit the process if the database connection fails

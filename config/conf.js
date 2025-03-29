@@ -10,6 +10,7 @@ const conf = {
     provider: process.env.STORAGE_PROVIDER || 'local',
     uploadDir: process.env.UPLOAD_DIR || 'uploads',
     maxFileSize: process.env.MAX_FILE_SIZE || 10 * 1024 * 1024, // 10 MB
+    deleteThreshold: process.env.DELETE_THRESHOLD || 6, // default 6 months
   },
   rateLimits: {
     upload: process.env.RATE_LIMIT_UPLOAD || 5,

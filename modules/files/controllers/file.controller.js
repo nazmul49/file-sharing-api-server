@@ -1,4 +1,4 @@
-import logger from "../config/logger.js";
+import logger from "../../../config/logger.js";
 import FileService from "../services/file.service.js";
 
 const fileService = new FileService();

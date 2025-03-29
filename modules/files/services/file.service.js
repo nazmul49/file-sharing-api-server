@@ -1,8 +1,8 @@
-import conf from "../config/conf.js";
+import conf from "../../../config/conf.js";
 import File from "../models/file.js";
 import LocalFileSystemProvider from "./localFileSystemProvider.js";
 import CloudStorageProvider from "./cloudStorageProvider.js";
-import logger from '../config/logger.js';
+import logger from '../../../config/logger.js';
 
 class FileService {
   constructor() {
@@ -31,6 +31,7 @@ class FileService {
         publicKey: response.publicKey,
         privateKey: response.privateKey,
         provider: response.provider,
+        lastReadAt: new Date(),
       };
 
       await File.create(metadata);
@@ -52,6 +53,10 @@ class FileService {
       throw new Error('File metadata not found');
     }
 
+    // update the lastAccessed timestamp
+    fileRecord.lastReadAt = new Date();
+    await fileRecord.save();
+
     return await this.provider.downloadFile(fileRecord.filePath);
   }
 
@@ -67,6 +72,42 @@ class FileService {
     }
 
     return { message: "File deleted successfully" };
+  }
+
+  async deleteInactiveFiles(months) {
+    try {
+      // Calculate the cutoff date for inactivity
+      const cutoffDate = new Date();
+      cutoffDate.setMonth(cutoffDate.getMonth() - months);
+
+      // Find all files that haven't been accessed since the cutoff date
+      const inactiveFiles = await File.findAll({
+        where: {
+          lastReadAt: { $lt: cutoffDate }, // Files with lastReadAt before the cutoff date
+        },
+      });
+
+      if (inactiveFiles.length === 0) {
+        logger.info('No inactive files found for deletion.');
+        return;
+      }
+
+      // Delete each inactive file
+      for (const file of inactiveFiles) {
+        const removeFileResponse = await this.provider.deleteFile(file.filePath);
+        if (removeFileResponse) {
+          await file.destroy(); // Remove the file record from the database
+          logger.info(`Deleted file: ${file.filePath}`);
+        } else {
+          logger.error(`Failed to delete file: ${file.filePath}`);
+        }
+      }
+
+      logger.info(`${inactiveFiles.length} inactive files deleted successfully.`);
+    } catch (error) {
+      logger.error('Error deleting inactive files: ', error);
+      throw new Error('Failed to delete inactive files.');
+    }
   }
 }
 

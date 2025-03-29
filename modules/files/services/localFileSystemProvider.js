@@ -3,7 +3,7 @@ import { join } from 'path';
 import { v4 as uuidv4 } from 'uuid';
 
 import StorageProvider from './storageProvider.js';
-import logger from '../config/logger.js';
+import logger from '../../../config/logger.js';
 
 class LocalFileSystemProvider extends StorageProvider {
   constructor(rootFolder) {
