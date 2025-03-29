@@ -1,7 +1,8 @@
 import { CronJob } from 'cron';
 import deleteInactiveFiles from './tasks/deleteActiveFiles.js';
 
-const job1 = new CronJob('*/5 * * * *', deleteInactiveFiles);
+// Run the job once a day at midnight (00:00)
+const job1 = new CronJob('0 0 * * *', deleteInactiveFiles);
 
 const start_bg_jobs = () => {
   console.log('Starting background job');

@@ -6,7 +6,7 @@
   "scripts": {
     "start": "ENVIRONMENT=production node app.js",
     "dev": "nodemon app.js",
-    "test": "ENVIRONMENT=test jest --maxWorkers=1 --forceExit"
+    "test": "mocha --exit tests/**/*.js"
   },
   "engines": {
     "node": ">=20"
@@ -27,6 +27,9 @@
     "winston": "^3.17.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.9"
+    "chai": "^5.2.0",
+    "mocha": "^11.1.0",
+    "nodemon": "^3.1.9",
+    "supertest": "^7.1.0"
   }
 }
